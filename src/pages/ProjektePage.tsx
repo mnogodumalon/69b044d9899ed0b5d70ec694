@@ -9,7 +9,7 @@ import {
   TableHeader, TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Pencil, Trash2, Plus, Search, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { IconPencil, IconTrash, IconPlus, IconSearch, IconArrowsUpDown, IconArrowUp, IconArrowDown } from '@tabler/icons-react';
 import { ProjekteDialog } from '@/components/dialogs/ProjekteDialog';
 import { ProjekteViewDialog } from '@/components/dialogs/ProjekteViewDialog';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
@@ -131,13 +131,13 @@ export default function ProjektePage() {
       title="Projekte"
       subtitle={`${records.length} Projekte im System`}
       action={
-        <Button onClick={() => setDialogOpen(true)} className="shrink-0">
-          <Plus className="h-4 w-4 mr-2" /> Hinzufügen
+        <Button onClick={() => setDialogOpen(true)} className="shrink-0 rounded-full shadow-sm">
+          <IconPlus className="h-4 w-4 mr-2" /> Hinzufügen
         </Button>
       }
     >
       <div className="relative w-full max-w-sm">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
           placeholder="Projekte suchen..."
           value={search}
@@ -145,83 +145,83 @@ export default function ProjektePage() {
           className="pl-9"
         />
       </div>
-      <div className="rounded-lg border bg-card overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('projektnummer')}>
+      <div className="rounded-[27px] bg-card shadow-lg overflow-hidden">
+        <Table className="[&_tbody_td]:px-6 [&_tbody_td]:py-2 [&_tbody_td]:text-base [&_tbody_td]:font-medium [&_tbody_tr:first-child_td]:pt-6 [&_tbody_tr:last-child_td]:pb-10">
+          <TableHeader className="bg-secondary">
+            <TableRow className="border-b border-input">
+              <TableHead className="uppercase text-xs font-semibold text-secondary-foreground tracking-wider px-6 cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('projektnummer')}>
                 <span className="inline-flex items-center gap-1">
                   Projektnummer
-                  {sortKey === 'projektnummer' ? (sortDir === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />) : <ArrowUpDown size={14} className="opacity-30" />}
+                  {sortKey === 'projektnummer' ? (sortDir === 'asc' ? <IconArrowUp size={14} /> : <IconArrowDown size={14} />) : <IconArrowsUpDown size={14} className="opacity-30" />}
                 </span>
               </TableHead>
-              <TableHead className="cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('projektname')}>
+              <TableHead className="uppercase text-xs font-semibold text-secondary-foreground tracking-wider px-6 cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('projektname')}>
                 <span className="inline-flex items-center gap-1">
                   Projektname
-                  {sortKey === 'projektname' ? (sortDir === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />) : <ArrowUpDown size={14} className="opacity-30" />}
+                  {sortKey === 'projektname' ? (sortDir === 'asc' ? <IconArrowUp size={14} /> : <IconArrowDown size={14} />) : <IconArrowsUpDown size={14} className="opacity-30" />}
                 </span>
               </TableHead>
-              <TableHead className="cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('kunde')}>
+              <TableHead className="uppercase text-xs font-semibold text-secondary-foreground tracking-wider px-6 cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('kunde')}>
                 <span className="inline-flex items-center gap-1">
                   Kunde
-                  {sortKey === 'kunde' ? (sortDir === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />) : <ArrowUpDown size={14} className="opacity-30" />}
+                  {sortKey === 'kunde' ? (sortDir === 'asc' ? <IconArrowUp size={14} /> : <IconArrowDown size={14} />) : <IconArrowsUpDown size={14} className="opacity-30" />}
                 </span>
               </TableHead>
-              <TableHead className="cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('kategorie')}>
+              <TableHead className="uppercase text-xs font-semibold text-secondary-foreground tracking-wider px-6 cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('kategorie')}>
                 <span className="inline-flex items-center gap-1">
                   Projektkategorie
-                  {sortKey === 'kategorie' ? (sortDir === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />) : <ArrowUpDown size={14} className="opacity-30" />}
+                  {sortKey === 'kategorie' ? (sortDir === 'asc' ? <IconArrowUp size={14} /> : <IconArrowDown size={14} />) : <IconArrowsUpDown size={14} className="opacity-30" />}
                 </span>
               </TableHead>
-              <TableHead className="cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('projektleiter')}>
+              <TableHead className="uppercase text-xs font-semibold text-secondary-foreground tracking-wider px-6 cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('projektleiter')}>
                 <span className="inline-flex items-center gap-1">
                   Projektleiter
-                  {sortKey === 'projektleiter' ? (sortDir === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />) : <ArrowUpDown size={14} className="opacity-30" />}
+                  {sortKey === 'projektleiter' ? (sortDir === 'asc' ? <IconArrowUp size={14} /> : <IconArrowDown size={14} />) : <IconArrowsUpDown size={14} className="opacity-30" />}
                 </span>
               </TableHead>
-              <TableHead className="cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('partner')}>
+              <TableHead className="uppercase text-xs font-semibold text-secondary-foreground tracking-wider px-6 cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('partner')}>
                 <span className="inline-flex items-center gap-1">
                   Partner / Kooperationspartner
-                  {sortKey === 'partner' ? (sortDir === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />) : <ArrowUpDown size={14} className="opacity-30" />}
+                  {sortKey === 'partner' ? (sortDir === 'asc' ? <IconArrowUp size={14} /> : <IconArrowDown size={14} />) : <IconArrowsUpDown size={14} className="opacity-30" />}
                 </span>
               </TableHead>
-              <TableHead className="cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('status')}>
+              <TableHead className="uppercase text-xs font-semibold text-secondary-foreground tracking-wider px-6 cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('status')}>
                 <span className="inline-flex items-center gap-1">
                   Projektstand
-                  {sortKey === 'status' ? (sortDir === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />) : <ArrowUpDown size={14} className="opacity-30" />}
+                  {sortKey === 'status' ? (sortDir === 'asc' ? <IconArrowUp size={14} /> : <IconArrowDown size={14} />) : <IconArrowsUpDown size={14} className="opacity-30" />}
                 </span>
               </TableHead>
-              <TableHead className="cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('beginn')}>
+              <TableHead className="uppercase text-xs font-semibold text-secondary-foreground tracking-wider px-6 cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('beginn')}>
                 <span className="inline-flex items-center gap-1">
                   Projektbeginn
-                  {sortKey === 'beginn' ? (sortDir === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />) : <ArrowUpDown size={14} className="opacity-30" />}
+                  {sortKey === 'beginn' ? (sortDir === 'asc' ? <IconArrowUp size={14} /> : <IconArrowDown size={14} />) : <IconArrowsUpDown size={14} className="opacity-30" />}
                 </span>
               </TableHead>
-              <TableHead className="cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('projektstand_beschreibung')}>
+              <TableHead className="uppercase text-xs font-semibold text-secondary-foreground tracking-wider px-6 cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('projektstand_beschreibung')}>
                 <span className="inline-flex items-center gap-1">
                   Aktueller Projektstand
-                  {sortKey === 'projektstand_beschreibung' ? (sortDir === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />) : <ArrowUpDown size={14} className="opacity-30" />}
+                  {sortKey === 'projektstand_beschreibung' ? (sortDir === 'asc' ? <IconArrowUp size={14} /> : <IconArrowDown size={14} />) : <IconArrowsUpDown size={14} className="opacity-30" />}
                 </span>
               </TableHead>
-              <TableHead className="cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('naechster_schritt')}>
+              <TableHead className="uppercase text-xs font-semibold text-secondary-foreground tracking-wider px-6 cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('naechster_schritt')}>
                 <span className="inline-flex items-center gap-1">
                   Nächster Schritt
-                  {sortKey === 'naechster_schritt' ? (sortDir === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />) : <ArrowUpDown size={14} className="opacity-30" />}
+                  {sortKey === 'naechster_schritt' ? (sortDir === 'asc' ? <IconArrowUp size={14} /> : <IconArrowDown size={14} />) : <IconArrowsUpDown size={14} className="opacity-30" />}
                 </span>
               </TableHead>
-              <TableHead className="cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('beschreibung')}>
+              <TableHead className="uppercase text-xs font-semibold text-secondary-foreground tracking-wider px-6 cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('beschreibung')}>
                 <span className="inline-flex items-center gap-1">
                   Projektbeschreibung
-                  {sortKey === 'beschreibung' ? (sortDir === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />) : <ArrowUpDown size={14} className="opacity-30" />}
+                  {sortKey === 'beschreibung' ? (sortDir === 'asc' ? <IconArrowUp size={14} /> : <IconArrowDown size={14} />) : <IconArrowsUpDown size={14} className="opacity-30" />}
                 </span>
               </TableHead>
-              <TableHead className="cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('eigene_rolle')}>
+              <TableHead className="uppercase text-xs font-semibold text-secondary-foreground tracking-wider px-6 cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('eigene_rolle')}>
                 <span className="inline-flex items-center gap-1">
                   Eigene Rolle im Projekt
-                  {sortKey === 'eigene_rolle' ? (sortDir === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />) : <ArrowUpDown size={14} className="opacity-30" />}
+                  {sortKey === 'eigene_rolle' ? (sortDir === 'asc' ? <IconArrowUp size={14} /> : <IconArrowDown size={14} />) : <IconArrowsUpDown size={14} className="opacity-30" />}
                 </span>
               </TableHead>
-              <TableHead className="w-24">Aktionen</TableHead>
+              <TableHead className="w-24 uppercase text-xs font-semibold text-secondary-foreground tracking-wider px-6">Aktionen</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -229,11 +229,11 @@ export default function ProjektePage() {
               <TableRow key={record.record_id} className="hover:bg-muted/50 transition-colors cursor-pointer" onClick={(e) => { if ((e.target as HTMLElement).closest('button, [role="checkbox"]')) return; setViewingRecord(record); }}>
                 <TableCell className="font-medium">{record.fields.projektnummer ?? '—'}</TableCell>
                 <TableCell>{record.fields.projektname ?? '—'}</TableCell>
-                <TableCell>{getKundenDisplayName(record.fields.kunde)}</TableCell>
-                <TableCell><Badge variant="secondary">{record.fields.kategorie?.label ?? '—'}</Badge></TableCell>
-                <TableCell>{getBeraterDisplayName(record.fields.projektleiter)}</TableCell>
+                <TableCell><span className="inline-flex items-center bg-secondary border border-[#bfdbfe] text-[#2563eb] rounded-[10px] px-2 py-1 text-sm font-medium">{getKundenDisplayName(record.fields.kunde)}</span></TableCell>
+                <TableCell><span className="inline-flex items-center bg-secondary border border-[#bfdbfe] text-[#2563eb] rounded-[10px] px-2 py-1 text-sm font-medium">{record.fields.kategorie?.label ?? '—'}</span></TableCell>
+                <TableCell><span className="inline-flex items-center bg-secondary border border-[#bfdbfe] text-[#2563eb] rounded-[10px] px-2 py-1 text-sm font-medium">{getBeraterDisplayName(record.fields.projektleiter)}</span></TableCell>
                 <TableCell>{record.fields.partner ?? '—'}</TableCell>
-                <TableCell><Badge variant="secondary">{record.fields.status?.label ?? '—'}</Badge></TableCell>
+                <TableCell><span className="inline-flex items-center bg-secondary border border-[#bfdbfe] text-[#2563eb] rounded-[10px] px-2 py-1 text-sm font-medium">{record.fields.status?.label ?? '—'}</span></TableCell>
                 <TableCell className="text-muted-foreground">{formatDate(record.fields.beginn)}</TableCell>
                 <TableCell className="max-w-xs"><span className="truncate block">{record.fields.projektstand_beschreibung ?? '—'}</span></TableCell>
                 <TableCell className="max-w-xs"><span className="truncate block">{record.fields.naechster_schritt ?? '—'}</span></TableCell>
@@ -242,10 +242,10 @@ export default function ProjektePage() {
                 <TableCell>
                   <div className="flex gap-1">
                     <Button variant="ghost" size="icon" onClick={() => setEditingRecord(record)}>
-                      <Pencil className="h-4 w-4" />
+                      <IconPencil className="h-4 w-4" />
                     </Button>
                     <Button variant="ghost" size="icon" onClick={() => setDeleteTarget(record)}>
-                      <Trash2 className="h-4 w-4 text-destructive" />
+                      <IconTrash className="h-4 w-4 text-destructive" />
                     </Button>
                   </div>
                 </TableCell>

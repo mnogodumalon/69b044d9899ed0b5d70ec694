@@ -1,21 +1,21 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useDashboardData } from '@/hooks/useDashboardData';
-import type { Kunden, Berater, Leistungskatalog, Projekte, Angebote, Rechnungen, Rechnungsliste } from '@/types/app';
+import type { Leistungskatalog, Angebote, Rechnungen, Kunden, Rechnungsliste, Berater, Projekte } from '@/types/app';
 import { LivingAppsService, extractRecordId, cleanFieldsForApi } from '@/services/livingAppsService';
-import { KundenDialog } from '@/components/dialogs/KundenDialog';
-import { KundenViewDialog } from '@/components/dialogs/KundenViewDialog';
-import { BeraterDialog } from '@/components/dialogs/BeraterDialog';
-import { BeraterViewDialog } from '@/components/dialogs/BeraterViewDialog';
 import { LeistungskatalogDialog } from '@/components/dialogs/LeistungskatalogDialog';
 import { LeistungskatalogViewDialog } from '@/components/dialogs/LeistungskatalogViewDialog';
-import { ProjekteDialog } from '@/components/dialogs/ProjekteDialog';
-import { ProjekteViewDialog } from '@/components/dialogs/ProjekteViewDialog';
 import { AngeboteDialog } from '@/components/dialogs/AngeboteDialog';
 import { AngeboteViewDialog } from '@/components/dialogs/AngeboteViewDialog';
 import { RechnungenDialog } from '@/components/dialogs/RechnungenDialog';
 import { RechnungenViewDialog } from '@/components/dialogs/RechnungenViewDialog';
+import { KundenDialog } from '@/components/dialogs/KundenDialog';
+import { KundenViewDialog } from '@/components/dialogs/KundenViewDialog';
 import { RechnungslisteDialog } from '@/components/dialogs/RechnungslisteDialog';
 import { RechnungslisteViewDialog } from '@/components/dialogs/RechnungslisteViewDialog';
+import { BeraterDialog } from '@/components/dialogs/BeraterDialog';
+import { BeraterViewDialog } from '@/components/dialogs/BeraterViewDialog';
+import { ProjekteDialog } from '@/components/dialogs/ProjekteDialog';
+import { ProjekteViewDialog } from '@/components/dialogs/ProjekteViewDialog';
 import { BulkEditDialog } from '@/components/dialogs/BulkEditDialog';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
 import { PageShell } from '@/components/PageShell';
@@ -32,7 +32,7 @@ import {
   SelectTrigger, SelectValue,
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Pencil, Trash2, Plus, Filter, X, ArrowUpDown, ArrowUp, ArrowDown, Search, Copy } from 'lucide-react';
+import { IconPencil, IconTrash, IconPlus, IconFilter, IconX, IconArrowsUpDown, IconArrowUp, IconArrowDown, IconSearch, IconCopy } from '@tabler/icons-react';
 import { format, parseISO } from 'date-fns';
 import { de } from 'date-fns/locale';
 
@@ -42,28 +42,6 @@ function fmtDate(d?: string) {
 }
 
 // Field metadata per entity for bulk edit and column filters
-const KUNDEN_FIELDS = [
-  { key: 'organisation', label: 'Organisation / Firma', type: 'string/text' },
-  { key: 'ansprechperson_vorname', label: 'Vorname Ansprechpartner', type: 'string/text' },
-  { key: 'ansprechperson_nachname', label: 'Nachname Ansprechpartner', type: 'string/text' },
-  { key: 'email', label: 'E-Mail', type: 'string/email' },
-  { key: 'telefon', label: 'Telefon', type: 'string/tel' },
-  { key: 'strasse', label: 'Straße', type: 'string/text' },
-  { key: 'hausnummer', label: 'Hausnummer', type: 'string/text' },
-  { key: 'postleitzahl', label: 'Postleitzahl', type: 'string/text' },
-  { key: 'stadt', label: 'Stadt', type: 'string/text' },
-  { key: 'notizen', label: 'Notizen', type: 'string/textarea' },
-];
-const BERATER_FIELDS = [
-  { key: 'vorname', label: 'Vorname', type: 'string/text' },
-  { key: 'nachname', label: 'Nachname', type: 'string/text' },
-  { key: 'kuerzel', label: 'Kürzel', type: 'string/text' },
-  { key: 'rolle', label: 'Rolle', type: 'lookup/select', options: [{ key: 'geschaeftsfuehrer', label: 'Geschäftsführer' }, { key: 'berater', label: 'Berater' }, { key: 'coach', label: 'Coach' }, { key: 'projektentwickler', label: 'Projektentwickler' }, { key: 'interimsmanager', label: 'Interimsmanager' }, { key: 'moderator', label: 'Moderator' }, { key: 'externer_partner', label: 'Externer Partner' }] },
-  { key: 'status', label: 'Status', type: 'lookup/select', options: [{ key: 'aktiv', label: 'Aktiv' }, { key: 'verfuegbar', label: 'Verfügbar' }, { key: 'ausgelastet', label: 'Ausgelastet' }, { key: 'inaktiv', label: 'Inaktiv' }] },
-  { key: 'email', label: 'E-Mail', type: 'string/email' },
-  { key: 'telefon', label: 'Telefon', type: 'string/tel' },
-  { key: 'kompetenzen', label: 'Kompetenzen / Schwerpunkte', type: 'string/textarea' },
-];
 const LEISTUNGSKATALOG_FIELDS = [
   { key: 'kategorie', label: 'Kategorie', type: 'lookup/select', options: [{ key: 'sb', label: 'Strategieberatung (SB)' }, { key: 'co', label: 'Coaching (CO)' }, { key: 'pe', label: 'Personalprojekte (PE)' }, { key: 'ig', label: 'Interimsgeschäftsführung (IG)' }, { key: 'ib', label: 'Inklusionsbetriebe (IB)' }, { key: 'pi', label: 'Projekte Inklusion (PI)' }, { key: 'wo', label: 'Workshops/Seminare (WO)' }, { key: 'ip', label: 'Immobilienprojekte (IP)' }, { key: 'it', label: 'IT-Projekte (IT)' }, { key: 'so', label: 'Sonstiges (SO)' }] },
   { key: 'beschreibung', label: 'Beschreibung', type: 'string/textarea' },
@@ -71,20 +49,6 @@ const LEISTUNGSKATALOG_FIELDS = [
   { key: 'einheit', label: 'Einheit', type: 'lookup/select', options: [{ key: 'stunde', label: 'pro Stunde' }, { key: 'tag', label: 'pro Tag' }, { key: 'pauschal', label: 'Pauschal' }, { key: 'monat', label: 'pro Monat' }] },
   { key: 'notizen', label: 'Interne Notizen', type: 'string/textarea' },
   { key: 'leistungsbezeichnung', label: 'Leistungsbezeichnung', type: 'string/text' },
-];
-const PROJEKTE_FIELDS = [
-  { key: 'projektnummer', label: 'Projektnummer', type: 'string/text' },
-  { key: 'projektname', label: 'Projektname', type: 'string/text' },
-  { key: 'kunde', label: 'Kunde', type: 'applookup/select', targetEntity: 'kunden', targetAppId: 'KUNDEN', displayField: 'organisation' },
-  { key: 'kategorie', label: 'Projektkategorie', type: 'lookup/select', options: [{ key: 'sb', label: 'Strategieberatung (SB)' }, { key: 'co', label: 'Coaching (CO)' }, { key: 'pe', label: 'Personalprojekte (PE)' }, { key: 'ig', label: 'Interimsgeschäftsführung (IG)' }, { key: 'ib', label: 'Inklusionsbetriebe (IB)' }, { key: 'pi', label: 'Projekte Inklusion (PI)' }, { key: 'wo', label: 'Workshops/Seminare (WO)' }, { key: 'ip', label: 'Immobilienprojekte (IP)' }, { key: 'it', label: 'IT-Projekte (IT)' }, { key: 'so', label: 'Sonstiges (SO)' }] },
-  { key: 'projektleiter', label: 'Projektleiter', type: 'applookup/select', targetEntity: 'berater', targetAppId: 'BERATER', displayField: 'vorname' },
-  { key: 'partner', label: 'Partner / Kooperationspartner', type: 'string/text' },
-  { key: 'status', label: 'Projektstand', type: 'lookup/select', options: [{ key: 'aktuell', label: '1 - Aktuell' }, { key: 'akquise', label: '2 - Akquise' }, { key: 'abgeschlossen', label: '3 - Abgeschlossen' }] },
-  { key: 'beginn', label: 'Projektbeginn', type: 'date/date' },
-  { key: 'projektstand_beschreibung', label: 'Aktueller Projektstand', type: 'string/textarea' },
-  { key: 'naechster_schritt', label: 'Nächster Schritt', type: 'string/textarea' },
-  { key: 'beschreibung', label: 'Projektbeschreibung', type: 'string/textarea' },
-  { key: 'eigene_rolle', label: 'Eigene Rolle im Projekt', type: 'string/text' },
 ];
 const ANGEBOTE_FIELDS = [
   { key: 'angebotsnummer', label: 'Angebotsnummer', type: 'string/text' },
@@ -107,6 +71,18 @@ const RECHNUNGEN_FIELDS = [
   { key: 'zahlungsdatum', label: 'Zahlungsdatum', type: 'date/date' },
   { key: 'bemerkungen', label: 'Bemerkungen', type: 'string/textarea' },
 ];
+const KUNDEN_FIELDS = [
+  { key: 'organisation', label: 'Organisation / Firma', type: 'string/text' },
+  { key: 'ansprechperson_vorname', label: 'Vorname Ansprechpartner', type: 'string/text' },
+  { key: 'ansprechperson_nachname', label: 'Nachname Ansprechpartner', type: 'string/text' },
+  { key: 'email', label: 'E-Mail', type: 'string/email' },
+  { key: 'telefon', label: 'Telefon', type: 'string/tel' },
+  { key: 'strasse', label: 'Straße', type: 'string/text' },
+  { key: 'hausnummer', label: 'Hausnummer', type: 'string/text' },
+  { key: 'postleitzahl', label: 'Postleitzahl', type: 'string/text' },
+  { key: 'stadt', label: 'Stadt', type: 'string/text' },
+  { key: 'notizen', label: 'Notizen', type: 'string/textarea' },
+];
 const RECHNUNGSLISTE_FIELDS = [
   { key: 'rechnung', label: 'Rechnung', type: 'applookup/select', targetEntity: 'rechnungen', targetAppId: 'RECHNUNGEN', displayField: 'rechnungsnummer' },
   { key: 'zugehoeriges_angebot', label: 'Zugehöriges Angebot', type: 'applookup/select', targetEntity: 'angebote', targetAppId: 'ANGEBOTE', displayField: 'angebotsnummer' },
@@ -117,15 +93,39 @@ const RECHNUNGSLISTE_FIELDS = [
   { key: 'zahlungsstatus', label: 'Zahlungsstatus', type: 'lookup/select', options: [{ key: 'offen', label: 'Offen' }, { key: 'bezahlt', label: 'Bezahlt' }, { key: 'ueberfaellig', label: 'Überfällig' }, { key: 'teilweise_bezahlt', label: 'Teilweise bezahlt' }, { key: 'storniert', label: 'Storniert' }] },
   { key: 'bemerkungen', label: 'Bemerkungen', type: 'string/textarea' },
 ];
+const BERATER_FIELDS = [
+  { key: 'vorname', label: 'Vorname', type: 'string/text' },
+  { key: 'nachname', label: 'Nachname', type: 'string/text' },
+  { key: 'kuerzel', label: 'Kürzel', type: 'string/text' },
+  { key: 'rolle', label: 'Rolle', type: 'lookup/select', options: [{ key: 'geschaeftsfuehrer', label: 'Geschäftsführer' }, { key: 'berater', label: 'Berater' }, { key: 'coach', label: 'Coach' }, { key: 'projektentwickler', label: 'Projektentwickler' }, { key: 'interimsmanager', label: 'Interimsmanager' }, { key: 'moderator', label: 'Moderator' }, { key: 'externer_partner', label: 'Externer Partner' }] },
+  { key: 'status', label: 'Status', type: 'lookup/select', options: [{ key: 'aktiv', label: 'Aktiv' }, { key: 'verfuegbar', label: 'Verfügbar' }, { key: 'ausgelastet', label: 'Ausgelastet' }, { key: 'inaktiv', label: 'Inaktiv' }] },
+  { key: 'email', label: 'E-Mail', type: 'string/email' },
+  { key: 'telefon', label: 'Telefon', type: 'string/tel' },
+  { key: 'kompetenzen', label: 'Kompetenzen / Schwerpunkte', type: 'string/textarea' },
+];
+const PROJEKTE_FIELDS = [
+  { key: 'projektnummer', label: 'Projektnummer', type: 'string/text' },
+  { key: 'projektname', label: 'Projektname', type: 'string/text' },
+  { key: 'kunde', label: 'Kunde', type: 'applookup/select', targetEntity: 'kunden', targetAppId: 'KUNDEN', displayField: 'organisation' },
+  { key: 'kategorie', label: 'Projektkategorie', type: 'lookup/select', options: [{ key: 'sb', label: 'Strategieberatung (SB)' }, { key: 'co', label: 'Coaching (CO)' }, { key: 'pe', label: 'Personalprojekte (PE)' }, { key: 'ig', label: 'Interimsgeschäftsführung (IG)' }, { key: 'ib', label: 'Inklusionsbetriebe (IB)' }, { key: 'pi', label: 'Projekte Inklusion (PI)' }, { key: 'wo', label: 'Workshops/Seminare (WO)' }, { key: 'ip', label: 'Immobilienprojekte (IP)' }, { key: 'it', label: 'IT-Projekte (IT)' }, { key: 'so', label: 'Sonstiges (SO)' }] },
+  { key: 'projektleiter', label: 'Projektleiter', type: 'applookup/select', targetEntity: 'berater', targetAppId: 'BERATER', displayField: 'vorname' },
+  { key: 'partner', label: 'Partner / Kooperationspartner', type: 'string/text' },
+  { key: 'status', label: 'Projektstand', type: 'lookup/select', options: [{ key: 'aktuell', label: '1 - Aktuell' }, { key: 'akquise', label: '2 - Akquise' }, { key: 'abgeschlossen', label: '3 - Abgeschlossen' }] },
+  { key: 'beginn', label: 'Projektbeginn', type: 'date/date' },
+  { key: 'projektstand_beschreibung', label: 'Aktueller Projektstand', type: 'string/textarea' },
+  { key: 'naechster_schritt', label: 'Nächster Schritt', type: 'string/textarea' },
+  { key: 'beschreibung', label: 'Projektbeschreibung', type: 'string/textarea' },
+  { key: 'eigene_rolle', label: 'Eigene Rolle im Projekt', type: 'string/text' },
+];
 
 const ENTITY_TABS = [
-  { key: 'kunden', label: 'Kunden', pascal: 'Kunden' },
-  { key: 'berater', label: 'Berater', pascal: 'Berater' },
   { key: 'leistungskatalog', label: 'Leistungskatalog', pascal: 'Leistungskatalog' },
-  { key: 'projekte', label: 'Projekte', pascal: 'Projekte' },
   { key: 'angebote', label: 'Angebote', pascal: 'Angebote' },
   { key: 'rechnungen', label: 'Rechnungen', pascal: 'Rechnungen' },
+  { key: 'kunden', label: 'Kunden', pascal: 'Kunden' },
   { key: 'rechnungsliste', label: 'Rechnungsliste', pascal: 'Rechnungsliste' },
+  { key: 'berater', label: 'Berater', pascal: 'Berater' },
+  { key: 'projekte', label: 'Projekte', pascal: 'Projekte' },
 ] as const;
 
 type EntityKey = typeof ENTITY_TABS[number]['key'];
@@ -134,24 +134,24 @@ export default function AdminPage() {
   const data = useDashboardData();
   const { loading, error, fetchAll } = data;
 
-  const [activeTab, setActiveTab] = useState<EntityKey>('kunden');
+  const [activeTab, setActiveTab] = useState<EntityKey>('leistungskatalog');
   const [selectedIds, setSelectedIds] = useState<Record<EntityKey, Set<string>>>(() => ({
-    kunden: new Set(),
-    berater: new Set(),
-    leistungskatalog: new Set(),
-    projekte: new Set(),
-    angebote: new Set(),
-    rechnungen: new Set(),
-    rechnungsliste: new Set(),
+    'leistungskatalog': new Set(),
+    'angebote': new Set(),
+    'rechnungen': new Set(),
+    'kunden': new Set(),
+    'rechnungsliste': new Set(),
+    'berater': new Set(),
+    'projekte': new Set(),
   }));
   const [filters, setFilters] = useState<Record<EntityKey, Record<string, string>>>(() => ({
-    kunden: {},
-    berater: {},
-    leistungskatalog: {},
-    projekte: {},
-    angebote: {},
-    rechnungen: {},
-    rechnungsliste: {},
+    'leistungskatalog': {},
+    'angebote': {},
+    'rechnungen': {},
+    'kunden': {},
+    'rechnungsliste': {},
+    'berater': {},
+    'projekte': {},
   }));
   const [showFilters, setShowFilters] = useState(false);
   const [dialogState, setDialogState] = useState<{ entity: EntityKey; record: any } | null>(null);
@@ -166,13 +166,13 @@ export default function AdminPage() {
 
   const getRecords = useCallback((entity: EntityKey) => {
     switch (entity) {
-      case 'kunden': return (data as any).kunden as Kunden[] ?? [];
-      case 'berater': return (data as any).berater as Berater[] ?? [];
       case 'leistungskatalog': return (data as any).leistungskatalog as Leistungskatalog[] ?? [];
-      case 'projekte': return (data as any).projekte as Projekte[] ?? [];
       case 'angebote': return (data as any).angebote as Angebote[] ?? [];
       case 'rechnungen': return (data as any).rechnungen as Rechnungen[] ?? [];
+      case 'kunden': return (data as any).kunden as Kunden[] ?? [];
       case 'rechnungsliste': return (data as any).rechnungsliste as Rechnungsliste[] ?? [];
+      case 'berater': return (data as any).berater as Berater[] ?? [];
+      case 'projekte': return (data as any).projekte as Projekte[] ?? [];
       default: return [];
     }
   }, [data]);
@@ -180,10 +180,6 @@ export default function AdminPage() {
   const getLookupLists = useCallback((entity: EntityKey) => {
     const lists: Record<string, any[]> = {};
     switch (entity) {
-      case 'projekte':
-        lists.kundenList = (data as any).kunden ?? [];
-        lists.beraterList = (data as any).berater ?? [];
-        break;
       case 'angebote':
         lists.projekteList = (data as any).projekte ?? [];
         lists.leistungskatalogList = (data as any).leistungskatalog ?? [];
@@ -198,6 +194,10 @@ export default function AdminPage() {
         lists.projekteList = (data as any).projekte ?? [];
         lists.kundenList = (data as any).kunden ?? [];
         break;
+      case 'projekte':
+        lists.kundenList = (data as any).kunden ?? [];
+        lists.beraterList = (data as any).berater ?? [];
+        break;
     }
     return lists;
   }, [data]);
@@ -207,14 +207,7 @@ export default function AdminPage() {
     const id = extractRecordId(url);
     if (!id) return '—';
     const lists = getLookupLists(entity);
-    if (entity === 'projekte' && fieldKey === 'kunde') {
-      const match = (lists.kundenList ?? []).find((r: any) => r.record_id === id);
-      return match?.fields.organisation ?? '—';
-    }
-    if (entity === 'projekte' && fieldKey === 'projektleiter') {
-      const match = (lists.beraterList ?? []).find((r: any) => r.record_id === id);
-      return match?.fields.vorname ?? '—';
-    }
+    void fieldKey; // ensure used for noUnusedParameters
     if (entity === 'angebote' && fieldKey === 'projekt') {
       const match = (lists.projekteList ?? []).find((r: any) => r.record_id === id);
       return match?.fields.projektnummer ?? '—';
@@ -247,18 +240,26 @@ export default function AdminPage() {
       const match = (lists.kundenList ?? []).find((r: any) => r.record_id === id);
       return match?.fields.organisation ?? '—';
     }
-    return url;
+    if (entity === 'projekte' && fieldKey === 'kunde') {
+      const match = (lists.kundenList ?? []).find((r: any) => r.record_id === id);
+      return match?.fields.organisation ?? '—';
+    }
+    if (entity === 'projekte' && fieldKey === 'projektleiter') {
+      const match = (lists.beraterList ?? []).find((r: any) => r.record_id === id);
+      return match?.fields.vorname ?? '—';
+    }
+    return String(url);
   }, [getLookupLists]);
 
   const getFieldMeta = useCallback((entity: EntityKey) => {
     switch (entity) {
-      case 'kunden': return KUNDEN_FIELDS;
-      case 'berater': return BERATER_FIELDS;
       case 'leistungskatalog': return LEISTUNGSKATALOG_FIELDS;
-      case 'projekte': return PROJEKTE_FIELDS;
       case 'angebote': return ANGEBOTE_FIELDS;
       case 'rechnungen': return RECHNUNGEN_FIELDS;
+      case 'kunden': return KUNDEN_FIELDS;
       case 'rechnungsliste': return RECHNUNGSLISTE_FIELDS;
+      case 'berater': return BERATER_FIELDS;
+      case 'projekte': return PROJEKTE_FIELDS;
       default: return [];
     }
   }, []);
@@ -353,25 +354,10 @@ export default function AdminPage() {
 
   const getServiceMethods = useCallback((entity: EntityKey) => {
     switch (entity) {
-      case 'kunden': return {
-        create: (fields: any) => LivingAppsService.createKundenEntry(fields),
-        update: (id: string, fields: any) => LivingAppsService.updateKundenEntry(id, fields),
-        remove: (id: string) => LivingAppsService.deleteKundenEntry(id),
-      };
-      case 'berater': return {
-        create: (fields: any) => LivingAppsService.createBeraterEntry(fields),
-        update: (id: string, fields: any) => LivingAppsService.updateBeraterEntry(id, fields),
-        remove: (id: string) => LivingAppsService.deleteBeraterEntry(id),
-      };
       case 'leistungskatalog': return {
         create: (fields: any) => LivingAppsService.createLeistungskatalogEntry(fields),
         update: (id: string, fields: any) => LivingAppsService.updateLeistungskatalogEntry(id, fields),
         remove: (id: string) => LivingAppsService.deleteLeistungskatalogEntry(id),
-      };
-      case 'projekte': return {
-        create: (fields: any) => LivingAppsService.createProjekteEntry(fields),
-        update: (id: string, fields: any) => LivingAppsService.updateProjekteEntry(id, fields),
-        remove: (id: string) => LivingAppsService.deleteProjekteEntry(id),
       };
       case 'angebote': return {
         create: (fields: any) => LivingAppsService.createAngeboteEntry(fields),
@@ -383,10 +369,25 @@ export default function AdminPage() {
         update: (id: string, fields: any) => LivingAppsService.updateRechnungenEntry(id, fields),
         remove: (id: string) => LivingAppsService.deleteRechnungenEntry(id),
       };
+      case 'kunden': return {
+        create: (fields: any) => LivingAppsService.createKundenEntry(fields),
+        update: (id: string, fields: any) => LivingAppsService.updateKundenEntry(id, fields),
+        remove: (id: string) => LivingAppsService.deleteKundenEntry(id),
+      };
       case 'rechnungsliste': return {
         create: (fields: any) => LivingAppsService.createRechnungslisteEntry(fields),
         update: (id: string, fields: any) => LivingAppsService.updateRechnungslisteEntry(id, fields),
         remove: (id: string) => LivingAppsService.deleteRechnungslisteEntry(id),
+      };
+      case 'berater': return {
+        create: (fields: any) => LivingAppsService.createBeraterEntry(fields),
+        update: (id: string, fields: any) => LivingAppsService.updateBeraterEntry(id, fields),
+        remove: (id: string) => LivingAppsService.deleteBeraterEntry(id),
+      };
+      case 'projekte': return {
+        create: (fields: any) => LivingAppsService.createProjekteEntry(fields),
+        update: (id: string, fields: any) => LivingAppsService.updateProjekteEntry(id, fields),
+        remove: (id: string) => LivingAppsService.deleteProjekteEntry(id),
       };
       default: return null;
     }
@@ -508,7 +509,7 @@ export default function AdminPage() {
       subtitle="Alle Daten verwalten"
       action={
         <Button onClick={() => setCreateEntity(activeTab)} className="shrink-0">
-          <Plus className="h-4 w-4 mr-2" /> Hinzufügen
+          <IconPlus className="h-4 w-4 mr-2" /> Hinzufügen
         </Button>
       }
     >
@@ -535,7 +536,7 @@ export default function AdminPage() {
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div className="flex items-center gap-2">
           <div className="relative w-full max-w-sm">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Suchen..."
               value={search}
@@ -544,7 +545,7 @@ export default function AdminPage() {
             />
           </div>
           <Button variant="outline" size="sm" onClick={() => setShowFilters(f => !f)} className="gap-2">
-            <Filter className="h-4 w-4" />
+            <IconFilter className="h-4 w-4" />
             Filtern
             {activeFilterCount > 0 && (
               <Badge variant="secondary" className="ml-1">{activeFilterCount}</Badge>
@@ -557,19 +558,19 @@ export default function AdminPage() {
           )}
         </div>
         {sel.size > 0 && (
-          <div className="flex items-center gap-2 bg-muted/60 rounded-lg px-3 py-1.5">
+          <div className="flex items-center gap-2 flex-wrap bg-muted/60 rounded-lg px-3 py-1.5">
             <span className="text-sm font-medium">{sel.size} ausgewählt</span>
             <Button variant="outline" size="sm" onClick={() => setBulkEditOpen(activeTab)}>
-              <Pencil className="h-3.5 w-3.5 mr-1" /> Feld bearbeiten
+              <IconPencil className="h-3.5 w-3.5 sm:mr-1" /> <span className="hidden sm:inline">Feld bearbeiten</span>
             </Button>
             <Button variant="outline" size="sm" onClick={() => handleBulkClone()}>
-              <Copy className="h-3.5 w-3.5 mr-1" /> Kopieren
+              <IconCopy className="h-3.5 w-3.5 sm:mr-1" /> <span className="hidden sm:inline">Kopieren</span>
             </Button>
             <Button variant="destructive" size="sm" onClick={() => setDeleteTargets({ entity: activeTab, ids: Array.from(sel) })}>
-              <Trash2 className="h-3.5 w-3.5 mr-1" /> Ausgewählte löschen
+              <IconTrash className="h-3.5 w-3.5 sm:mr-1" /> <span className="hidden sm:inline">Ausgewählte löschen</span>
             </Button>
             <Button variant="ghost" size="sm" onClick={() => clearSelection(activeTab)}>
-              <X className="h-3.5 w-3.5 mr-1" /> Auswahl aufheben
+              <IconX className="h-3.5 w-3.5 sm:mr-1" /> <span className="hidden sm:inline">Auswahl aufheben</span>
             </Button>
           </div>
         )}
@@ -612,25 +613,25 @@ export default function AdminPage() {
         </div>
       )}
 
-      <div className="rounded-lg border bg-card overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-10">
+      <div className="rounded-[27px] bg-card shadow-lg overflow-x-auto">
+        <Table className="[&_tbody_td]:px-6 [&_tbody_td]:py-2 [&_tbody_td]:text-base [&_tbody_td]:font-medium [&_tbody_tr:first-child_td]:pt-6 [&_tbody_tr:last-child_td]:pb-10">
+          <TableHeader className="bg-secondary">
+            <TableRow className="border-b border-input">
+              <TableHead className="w-10 px-6">
                 <Checkbox
                   checked={allFiltered}
                   onCheckedChange={() => toggleSelectAll(activeTab)}
                 />
               </TableHead>
               {fieldMeta.map((fm: any) => (
-                <TableHead key={fm.key} className="cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort(fm.key)}>
+                <TableHead key={fm.key} className="uppercase text-xs font-semibold text-secondary-foreground tracking-wider px-6 cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort(fm.key)}>
                   <span className="inline-flex items-center gap-1">
                     {fm.label}
-                    {sortKey === fm.key ? (sortDir === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />) : <ArrowUpDown size={14} className="opacity-30" />}
+                    {sortKey === fm.key ? (sortDir === 'asc' ? <IconArrowUp size={14} /> : <IconArrowDown size={14} />) : <IconArrowsUpDown size={14} className="opacity-30" />}
                   </span>
                 </TableHead>
               ))}
-              <TableHead className="w-24">Aktionen</TableHead>
+              <TableHead className="w-24 uppercase text-xs font-semibold text-secondary-foreground tracking-wider px-6">Aktionen</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -656,13 +657,13 @@ export default function AdminPage() {
                     );
                   }
                   if (fm.type === 'lookup/select' || fm.type === 'lookup/radio') {
-                    return <TableCell key={fm.key}><Badge variant="secondary">{val?.label ?? '—'}</Badge></TableCell>;
+                    return <TableCell key={fm.key}><span className="inline-flex items-center bg-secondary border border-[#bfdbfe] text-[#2563eb] rounded-[10px] px-2 py-1 text-sm font-medium">{val?.label ?? '—'}</span></TableCell>;
                   }
                   if (fm.type.includes('multiplelookup')) {
                     return <TableCell key={fm.key}>{Array.isArray(val) ? val.map((v: any) => v?.label ?? v).join(', ') : '—'}</TableCell>;
                   }
                   if (fm.type.includes('applookup')) {
-                    return <TableCell key={fm.key}>{getApplookupDisplay(activeTab, fm.key, val)}</TableCell>;
+                    return <TableCell key={fm.key}><span className="inline-flex items-center bg-secondary border border-[#bfdbfe] text-[#2563eb] rounded-[10px] px-2 py-1 text-sm font-medium">{getApplookupDisplay(activeTab, fm.key, val)}</span></TableCell>;
                   }
                   if (fm.type.includes('date')) {
                     return <TableCell key={fm.key} className="text-muted-foreground">{fmtDate(val)}</TableCell>;
@@ -695,10 +696,10 @@ export default function AdminPage() {
                 <TableCell>
                   <div className="flex gap-1">
                     <Button variant="ghost" size="icon" onClick={() => setDialogState({ entity: activeTab, record })}>
-                      <Pencil className="h-4 w-4" />
+                      <IconPencil className="h-4 w-4" />
                     </Button>
                     <Button variant="ghost" size="icon" onClick={() => setDeleteTargets({ entity: activeTab, ids: [record.record_id] })}>
-                      <Trash2 className="h-4 w-4 text-destructive" />
+                      <IconTrash className="h-4 w-4 text-destructive" />
                     </Button>
                   </div>
                 </TableCell>
@@ -715,26 +716,6 @@ export default function AdminPage() {
         </Table>
       </div>
 
-      {(createEntity === 'kunden' || dialogState?.entity === 'kunden') && (
-        <KundenDialog
-          open={createEntity === 'kunden' || dialogState?.entity === 'kunden'}
-          onClose={() => { setCreateEntity(null); setDialogState(null); }}
-          onSubmit={dialogState?.entity === 'kunden' ? handleUpdate : (fields: any) => handleCreate('kunden', fields)}
-          defaultValues={dialogState?.entity === 'kunden' ? dialogState.record?.fields : undefined}
-          enablePhotoScan={AI_PHOTO_SCAN['Kunden']}
-          enablePhotoLocation={AI_PHOTO_LOCATION['Kunden']}
-        />
-      )}
-      {(createEntity === 'berater' || dialogState?.entity === 'berater') && (
-        <BeraterDialog
-          open={createEntity === 'berater' || dialogState?.entity === 'berater'}
-          onClose={() => { setCreateEntity(null); setDialogState(null); }}
-          onSubmit={dialogState?.entity === 'berater' ? handleUpdate : (fields: any) => handleCreate('berater', fields)}
-          defaultValues={dialogState?.entity === 'berater' ? dialogState.record?.fields : undefined}
-          enablePhotoScan={AI_PHOTO_SCAN['Berater']}
-          enablePhotoLocation={AI_PHOTO_LOCATION['Berater']}
-        />
-      )}
       {(createEntity === 'leistungskatalog' || dialogState?.entity === 'leistungskatalog') && (
         <LeistungskatalogDialog
           open={createEntity === 'leistungskatalog' || dialogState?.entity === 'leistungskatalog'}
@@ -743,18 +724,6 @@ export default function AdminPage() {
           defaultValues={dialogState?.entity === 'leistungskatalog' ? dialogState.record?.fields : undefined}
           enablePhotoScan={AI_PHOTO_SCAN['Leistungskatalog']}
           enablePhotoLocation={AI_PHOTO_LOCATION['Leistungskatalog']}
-        />
-      )}
-      {(createEntity === 'projekte' || dialogState?.entity === 'projekte') && (
-        <ProjekteDialog
-          open={createEntity === 'projekte' || dialogState?.entity === 'projekte'}
-          onClose={() => { setCreateEntity(null); setDialogState(null); }}
-          onSubmit={dialogState?.entity === 'projekte' ? handleUpdate : (fields: any) => handleCreate('projekte', fields)}
-          defaultValues={dialogState?.entity === 'projekte' ? dialogState.record?.fields : undefined}
-          kundenList={(data as any).kunden ?? []}
-          beraterList={(data as any).berater ?? []}
-          enablePhotoScan={AI_PHOTO_SCAN['Projekte']}
-          enablePhotoLocation={AI_PHOTO_LOCATION['Projekte']}
         />
       )}
       {(createEntity === 'angebote' || dialogState?.entity === 'angebote') && (
@@ -781,6 +750,16 @@ export default function AdminPage() {
           enablePhotoLocation={AI_PHOTO_LOCATION['Rechnungen']}
         />
       )}
+      {(createEntity === 'kunden' || dialogState?.entity === 'kunden') && (
+        <KundenDialog
+          open={createEntity === 'kunden' || dialogState?.entity === 'kunden'}
+          onClose={() => { setCreateEntity(null); setDialogState(null); }}
+          onSubmit={dialogState?.entity === 'kunden' ? handleUpdate : (fields: any) => handleCreate('kunden', fields)}
+          defaultValues={dialogState?.entity === 'kunden' ? dialogState.record?.fields : undefined}
+          enablePhotoScan={AI_PHOTO_SCAN['Kunden']}
+          enablePhotoLocation={AI_PHOTO_LOCATION['Kunden']}
+        />
+      )}
       {(createEntity === 'rechnungsliste' || dialogState?.entity === 'rechnungsliste') && (
         <RechnungslisteDialog
           open={createEntity === 'rechnungsliste' || dialogState?.entity === 'rechnungsliste'}
@@ -795,20 +774,26 @@ export default function AdminPage() {
           enablePhotoLocation={AI_PHOTO_LOCATION['Rechnungsliste']}
         />
       )}
-      {viewState?.entity === 'kunden' && (
-        <KundenViewDialog
-          open={viewState?.entity === 'kunden'}
-          onClose={() => setViewState(null)}
-          record={viewState?.record}
-          onEdit={(r: any) => { setViewState(null); setDialogState({ entity: 'kunden', record: r }); }}
+      {(createEntity === 'berater' || dialogState?.entity === 'berater') && (
+        <BeraterDialog
+          open={createEntity === 'berater' || dialogState?.entity === 'berater'}
+          onClose={() => { setCreateEntity(null); setDialogState(null); }}
+          onSubmit={dialogState?.entity === 'berater' ? handleUpdate : (fields: any) => handleCreate('berater', fields)}
+          defaultValues={dialogState?.entity === 'berater' ? dialogState.record?.fields : undefined}
+          enablePhotoScan={AI_PHOTO_SCAN['Berater']}
+          enablePhotoLocation={AI_PHOTO_LOCATION['Berater']}
         />
       )}
-      {viewState?.entity === 'berater' && (
-        <BeraterViewDialog
-          open={viewState?.entity === 'berater'}
-          onClose={() => setViewState(null)}
-          record={viewState?.record}
-          onEdit={(r: any) => { setViewState(null); setDialogState({ entity: 'berater', record: r }); }}
+      {(createEntity === 'projekte' || dialogState?.entity === 'projekte') && (
+        <ProjekteDialog
+          open={createEntity === 'projekte' || dialogState?.entity === 'projekte'}
+          onClose={() => { setCreateEntity(null); setDialogState(null); }}
+          onSubmit={dialogState?.entity === 'projekte' ? handleUpdate : (fields: any) => handleCreate('projekte', fields)}
+          defaultValues={dialogState?.entity === 'projekte' ? dialogState.record?.fields : undefined}
+          kundenList={(data as any).kunden ?? []}
+          beraterList={(data as any).berater ?? []}
+          enablePhotoScan={AI_PHOTO_SCAN['Projekte']}
+          enablePhotoLocation={AI_PHOTO_LOCATION['Projekte']}
         />
       )}
       {viewState?.entity === 'leistungskatalog' && (
@@ -817,16 +802,6 @@ export default function AdminPage() {
           onClose={() => setViewState(null)}
           record={viewState?.record}
           onEdit={(r: any) => { setViewState(null); setDialogState({ entity: 'leistungskatalog', record: r }); }}
-        />
-      )}
-      {viewState?.entity === 'projekte' && (
-        <ProjekteViewDialog
-          open={viewState?.entity === 'projekte'}
-          onClose={() => setViewState(null)}
-          record={viewState?.record}
-          onEdit={(r: any) => { setViewState(null); setDialogState({ entity: 'projekte', record: r }); }}
-          kundenList={(data as any).kunden ?? []}
-          beraterList={(data as any).berater ?? []}
         />
       )}
       {viewState?.entity === 'angebote' && (
@@ -849,6 +824,14 @@ export default function AdminPage() {
           leistungskatalogList={(data as any).leistungskatalog ?? []}
         />
       )}
+      {viewState?.entity === 'kunden' && (
+        <KundenViewDialog
+          open={viewState?.entity === 'kunden'}
+          onClose={() => setViewState(null)}
+          record={viewState?.record}
+          onEdit={(r: any) => { setViewState(null); setDialogState({ entity: 'kunden', record: r }); }}
+        />
+      )}
       {viewState?.entity === 'rechnungsliste' && (
         <RechnungslisteViewDialog
           open={viewState?.entity === 'rechnungsliste'}
@@ -859,6 +842,24 @@ export default function AdminPage() {
           angeboteList={(data as any).angebote ?? []}
           projekteList={(data as any).projekte ?? []}
           kundenList={(data as any).kunden ?? []}
+        />
+      )}
+      {viewState?.entity === 'berater' && (
+        <BeraterViewDialog
+          open={viewState?.entity === 'berater'}
+          onClose={() => setViewState(null)}
+          record={viewState?.record}
+          onEdit={(r: any) => { setViewState(null); setDialogState({ entity: 'berater', record: r }); }}
+        />
+      )}
+      {viewState?.entity === 'projekte' && (
+        <ProjekteViewDialog
+          open={viewState?.entity === 'projekte'}
+          onClose={() => setViewState(null)}
+          record={viewState?.record}
+          onEdit={(r: any) => { setViewState(null); setDialogState({ entity: 'projekte', record: r }); }}
+          kundenList={(data as any).kunden ?? []}
+          beraterList={(data as any).berater ?? []}
         />
       )}
 

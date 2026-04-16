@@ -9,7 +9,7 @@ import {
   TableHeader, TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Pencil, Trash2, Plus, Search, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { IconPencil, IconTrash, IconPlus, IconSearch, IconArrowsUpDown, IconArrowUp, IconArrowDown } from '@tabler/icons-react';
 import { BeraterDialog } from '@/components/dialogs/BeraterDialog';
 import { BeraterViewDialog } from '@/components/dialogs/BeraterViewDialog';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
@@ -103,13 +103,13 @@ export default function BeraterPage() {
       title="Berater"
       subtitle={`${records.length} Berater im System`}
       action={
-        <Button onClick={() => setDialogOpen(true)} className="shrink-0">
-          <Plus className="h-4 w-4 mr-2" /> Hinzufügen
+        <Button onClick={() => setDialogOpen(true)} className="shrink-0 rounded-full shadow-sm">
+          <IconPlus className="h-4 w-4 mr-2" /> Hinzufügen
         </Button>
       }
     >
       <div className="relative w-full max-w-sm">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
           placeholder="Berater suchen..."
           value={search}
@@ -117,59 +117,59 @@ export default function BeraterPage() {
           className="pl-9"
         />
       </div>
-      <div className="rounded-lg border bg-card overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('vorname')}>
+      <div className="rounded-[27px] bg-card shadow-lg overflow-hidden">
+        <Table className="[&_tbody_td]:px-6 [&_tbody_td]:py-2 [&_tbody_td]:text-base [&_tbody_td]:font-medium [&_tbody_tr:first-child_td]:pt-6 [&_tbody_tr:last-child_td]:pb-10">
+          <TableHeader className="bg-secondary">
+            <TableRow className="border-b border-input">
+              <TableHead className="uppercase text-xs font-semibold text-secondary-foreground tracking-wider px-6 cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('vorname')}>
                 <span className="inline-flex items-center gap-1">
                   Vorname
-                  {sortKey === 'vorname' ? (sortDir === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />) : <ArrowUpDown size={14} className="opacity-30" />}
+                  {sortKey === 'vorname' ? (sortDir === 'asc' ? <IconArrowUp size={14} /> : <IconArrowDown size={14} />) : <IconArrowsUpDown size={14} className="opacity-30" />}
                 </span>
               </TableHead>
-              <TableHead className="cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('nachname')}>
+              <TableHead className="uppercase text-xs font-semibold text-secondary-foreground tracking-wider px-6 cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('nachname')}>
                 <span className="inline-flex items-center gap-1">
                   Nachname
-                  {sortKey === 'nachname' ? (sortDir === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />) : <ArrowUpDown size={14} className="opacity-30" />}
+                  {sortKey === 'nachname' ? (sortDir === 'asc' ? <IconArrowUp size={14} /> : <IconArrowDown size={14} />) : <IconArrowsUpDown size={14} className="opacity-30" />}
                 </span>
               </TableHead>
-              <TableHead className="cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('kuerzel')}>
+              <TableHead className="uppercase text-xs font-semibold text-secondary-foreground tracking-wider px-6 cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('kuerzel')}>
                 <span className="inline-flex items-center gap-1">
                   Kürzel
-                  {sortKey === 'kuerzel' ? (sortDir === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />) : <ArrowUpDown size={14} className="opacity-30" />}
+                  {sortKey === 'kuerzel' ? (sortDir === 'asc' ? <IconArrowUp size={14} /> : <IconArrowDown size={14} />) : <IconArrowsUpDown size={14} className="opacity-30" />}
                 </span>
               </TableHead>
-              <TableHead className="cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('rolle')}>
+              <TableHead className="uppercase text-xs font-semibold text-secondary-foreground tracking-wider px-6 cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('rolle')}>
                 <span className="inline-flex items-center gap-1">
                   Rolle
-                  {sortKey === 'rolle' ? (sortDir === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />) : <ArrowUpDown size={14} className="opacity-30" />}
+                  {sortKey === 'rolle' ? (sortDir === 'asc' ? <IconArrowUp size={14} /> : <IconArrowDown size={14} />) : <IconArrowsUpDown size={14} className="opacity-30" />}
                 </span>
               </TableHead>
-              <TableHead className="cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('status')}>
+              <TableHead className="uppercase text-xs font-semibold text-secondary-foreground tracking-wider px-6 cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('status')}>
                 <span className="inline-flex items-center gap-1">
                   Status
-                  {sortKey === 'status' ? (sortDir === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />) : <ArrowUpDown size={14} className="opacity-30" />}
+                  {sortKey === 'status' ? (sortDir === 'asc' ? <IconArrowUp size={14} /> : <IconArrowDown size={14} />) : <IconArrowsUpDown size={14} className="opacity-30" />}
                 </span>
               </TableHead>
-              <TableHead className="cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('email')}>
+              <TableHead className="uppercase text-xs font-semibold text-secondary-foreground tracking-wider px-6 cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('email')}>
                 <span className="inline-flex items-center gap-1">
                   E-Mail
-                  {sortKey === 'email' ? (sortDir === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />) : <ArrowUpDown size={14} className="opacity-30" />}
+                  {sortKey === 'email' ? (sortDir === 'asc' ? <IconArrowUp size={14} /> : <IconArrowDown size={14} />) : <IconArrowsUpDown size={14} className="opacity-30" />}
                 </span>
               </TableHead>
-              <TableHead className="cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('telefon')}>
+              <TableHead className="uppercase text-xs font-semibold text-secondary-foreground tracking-wider px-6 cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('telefon')}>
                 <span className="inline-flex items-center gap-1">
                   Telefon
-                  {sortKey === 'telefon' ? (sortDir === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />) : <ArrowUpDown size={14} className="opacity-30" />}
+                  {sortKey === 'telefon' ? (sortDir === 'asc' ? <IconArrowUp size={14} /> : <IconArrowDown size={14} />) : <IconArrowsUpDown size={14} className="opacity-30" />}
                 </span>
               </TableHead>
-              <TableHead className="cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('kompetenzen')}>
+              <TableHead className="uppercase text-xs font-semibold text-secondary-foreground tracking-wider px-6 cursor-pointer select-none hover:text-foreground transition-colors" onClick={() => toggleSort('kompetenzen')}>
                 <span className="inline-flex items-center gap-1">
                   Kompetenzen / Schwerpunkte
-                  {sortKey === 'kompetenzen' ? (sortDir === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />) : <ArrowUpDown size={14} className="opacity-30" />}
+                  {sortKey === 'kompetenzen' ? (sortDir === 'asc' ? <IconArrowUp size={14} /> : <IconArrowDown size={14} />) : <IconArrowsUpDown size={14} className="opacity-30" />}
                 </span>
               </TableHead>
-              <TableHead className="w-24">Aktionen</TableHead>
+              <TableHead className="w-24 uppercase text-xs font-semibold text-secondary-foreground tracking-wider px-6">Aktionen</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -178,18 +178,18 @@ export default function BeraterPage() {
                 <TableCell className="font-medium">{record.fields.vorname ?? '—'}</TableCell>
                 <TableCell>{record.fields.nachname ?? '—'}</TableCell>
                 <TableCell>{record.fields.kuerzel ?? '—'}</TableCell>
-                <TableCell><Badge variant="secondary">{record.fields.rolle?.label ?? '—'}</Badge></TableCell>
-                <TableCell><Badge variant="secondary">{record.fields.status?.label ?? '—'}</Badge></TableCell>
+                <TableCell><span className="inline-flex items-center bg-secondary border border-[#bfdbfe] text-[#2563eb] rounded-[10px] px-2 py-1 text-sm font-medium">{record.fields.rolle?.label ?? '—'}</span></TableCell>
+                <TableCell><span className="inline-flex items-center bg-secondary border border-[#bfdbfe] text-[#2563eb] rounded-[10px] px-2 py-1 text-sm font-medium">{record.fields.status?.label ?? '—'}</span></TableCell>
                 <TableCell>{record.fields.email ?? '—'}</TableCell>
                 <TableCell>{record.fields.telefon ?? '—'}</TableCell>
                 <TableCell className="max-w-xs"><span className="truncate block">{record.fields.kompetenzen ?? '—'}</span></TableCell>
                 <TableCell>
                   <div className="flex gap-1">
                     <Button variant="ghost" size="icon" onClick={() => setEditingRecord(record)}>
-                      <Pencil className="h-4 w-4" />
+                      <IconPencil className="h-4 w-4" />
                     </Button>
                     <Button variant="ghost" size="icon" onClick={() => setDeleteTarget(record)}>
-                      <Trash2 className="h-4 w-4 text-destructive" />
+                      <IconTrash className="h-4 w-4 text-destructive" />
                     </Button>
                   </div>
                 </TableCell>

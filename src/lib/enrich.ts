@@ -12,22 +12,6 @@ function resolveDisplay(url: unknown, map: Map<string, any>, ...fields: string[]
   return fields.map(f => String(r.fields[f] ?? '')).join(' ').trim();
 }
 
-interface ProjekteMaps {
-  kundenMap: Map<string, Kunden>;
-  beraterMap: Map<string, Berater>;
-}
-
-export function enrichProjekte(
-  projekte: Projekte[],
-  maps: ProjekteMaps
-): EnrichedProjekte[] {
-  return projekte.map(r => ({
-    ...r,
-    kundeName: resolveDisplay(r.fields.kunde, maps.kundenMap, 'organisation'),
-    projektleiterName: resolveDisplay(r.fields.projektleiter, maps.beraterMap, 'vorname', 'nachname'),
-  }));
-}
-
 interface AngeboteMaps {
   projekteMap: Map<string, Projekte>;
   leistungskatalogMap: Map<string, Leistungskatalog>;
@@ -77,5 +61,21 @@ export function enrichRechnungsliste(
     zugehoeriges_angebotName: resolveDisplay(r.fields.zugehoeriges_angebot, maps.angeboteMap, 'angebotsnummer'),
     projektName: resolveDisplay(r.fields.projekt, maps.projekteMap, 'projektnummer'),
     kundeName: resolveDisplay(r.fields.kunde, maps.kundenMap, 'organisation'),
+  }));
+}
+
+interface ProjekteMaps {
+  kundenMap: Map<string, Kunden>;
+  beraterMap: Map<string, Berater>;
+}
+
+export function enrichProjekte(
+  projekte: Projekte[],
+  maps: ProjekteMaps
+): EnrichedProjekte[] {
+  return projekte.map(r => ({
+    ...r,
+    kundeName: resolveDisplay(r.fields.kunde, maps.kundenMap, 'organisation'),
+    projektleiterName: resolveDisplay(r.fields.projektleiter, maps.beraterMap, 'vorname', 'nachname'),
   }));
 }

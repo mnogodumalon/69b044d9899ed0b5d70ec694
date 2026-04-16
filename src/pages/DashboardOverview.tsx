@@ -8,7 +8,7 @@ import { LivingAppsService, extractRecordId, createRecordUrl } from '@/services/
 import { formatDate, formatCurrency } from '@/lib/formatters';
 import { AI_PHOTO_SCAN } from '@/config/ai-features';
 import { Skeleton } from '@/components/ui/skeleton';
-import { AlertCircle, Plus, TrendingUp, Users, FolderKanban, Receipt, Euro, ChevronRight, ArrowRight, Clock, CheckCircle2, Zap, Building2, MoreHorizontal, Edit2, Trash2 } from 'lucide-react';
+import { IconAlertCircle, IconPlus, IconTrendingUp, IconUsers, IconLayoutKanban, IconReceipt, IconCurrencyEuro, IconChevronRight, IconArrowRight, IconClock, IconCircleCheck, IconBolt, IconBuilding, IconDots, IconEdit, IconTrash } from '@tabler/icons-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { StatCard } from '@/components/StatCard';
@@ -114,7 +114,7 @@ export default function DashboardOverview() {
           <p className="text-sm text-muted-foreground mt-0.5">Projekte, Angebote & Rechnungen auf einen Blick</p>
         </div>
         <Button onClick={() => setProjektDialog({ open: true })} className="gap-2 shrink-0">
-          <Plus size={16} /> Neues Projekt
+          <IconPlus size={16} stroke={1.5} /> Neues Projekt
         </Button>
       </div>
 
@@ -124,25 +124,25 @@ export default function DashboardOverview() {
           title="Aktive Projekte"
           value={String(stats.aktuelleP)}
           description={`${stats.akquiseP} in Akquise`}
-          icon={<FolderKanban size={18} className="text-muted-foreground" />}
+          icon={<IconLayoutKanban size={18} stroke={1.5} className="text-muted-foreground" />}
         />
         <StatCard
           title="Kunden"
           value={String(kunden.length)}
           description="Gesamt"
-          icon={<Building2 size={18} className="text-muted-foreground" />}
+          icon={<IconBuilding size={18} stroke={1.5} className="text-muted-foreground" />}
         />
         <StatCard
           title="Offene Forderungen"
           value={formatCurrency(stats.offeneRechnungen)}
           description="Offen / Überfällig"
-          icon={<Receipt size={18} className="text-muted-foreground" />}
+          icon={<IconReceipt size={18} stroke={1.5} className="text-muted-foreground" />}
         />
         <StatCard
           title="Umsatz gesamt"
           value={formatCurrency(stats.totalRechnungen)}
           description="Alle Rechnungen"
-          icon={<Euro size={18} className="text-muted-foreground" />}
+          icon={<IconCurrencyEuro size={18} stroke={1.5} className="text-muted-foreground" />}
         />
       </div>
 
@@ -183,7 +183,7 @@ export default function DashboardOverview() {
                       className="h-7 w-7 p-0 text-white hover:bg-white/20"
                       onClick={() => setProjektDialog({ open: true })}
                     >
-                      <Plus size={14} />
+                      <IconPlus size={14} stroke={1.5} />
                     </Button>
                   </div>
 
@@ -223,13 +223,13 @@ export default function DashboardOverview() {
                                   className="p-1 rounded hover:bg-muted transition-colors"
                                   onClick={(e) => { e.stopPropagation(); setProjektDialog({ open: true, edit: projekt }); }}
                                 >
-                                  <Edit2 size={12} className="text-muted-foreground" />
+                                  <IconEdit size={12} stroke={1.5} className="text-muted-foreground" />
                                 </button>
                                 <button
                                   className="p-1 rounded hover:bg-red-50 transition-colors"
                                   onClick={(e) => { e.stopPropagation(); setDeleteTarget({ id: projekt.record_id, type: 'projekt' }); }}
                                 >
-                                  <Trash2 size={12} className="text-muted-foreground hover:text-red-500" />
+                                  <IconTrash size={12} stroke={1.5} className="text-muted-foreground hover:text-red-500" />
                                 </button>
                               </div>
                             </div>
@@ -245,7 +245,7 @@ export default function DashboardOverview() {
                               )}
                               {projekt.fields.beginn && (
                                 <span className="text-xs text-muted-foreground flex items-center gap-1">
-                                  <Clock size={10} />
+                                  <IconClock size={10} stroke={1.5} />
                                   {formatDate(projekt.fields.beginn)}
                                 </span>
                               )}
@@ -262,7 +262,7 @@ export default function DashboardOverview() {
                               )}
                               {projekt.fields.naechster_schritt && (
                                 <div className="flex gap-1.5">
-                                  <ArrowRight size={12} className="text-primary shrink-0 mt-0.5" />
+                                  <IconArrowRight size={12} stroke={1.5} className="text-primary shrink-0 mt-0.5" />
                                   <p className="text-xs text-foreground">{projekt.fields.naechster_schritt}</p>
                                 </div>
                               )}
@@ -278,7 +278,7 @@ export default function DashboardOverview() {
                                   className="h-7 text-xs gap-1 flex-1"
                                   onClick={() => setAngebotDialog({ open: true, projektId: projekt.record_id })}
                                 >
-                                  <Plus size={11} /> Angebot
+                                  <IconPlus size={11} stroke={1.5} /> Angebot
                                 </Button>
                                 <Button
                                   size="sm"
@@ -286,7 +286,7 @@ export default function DashboardOverview() {
                                   className="h-7 text-xs gap-1 flex-1"
                                   onClick={() => setRechnungDialog({ open: true, projektId: projekt.record_id })}
                                 >
-                                  <Plus size={11} /> Rechnung
+                                  <IconPlus size={11} stroke={1.5} /> Rechnung
                                 </Button>
                               </div>
 
@@ -339,13 +339,13 @@ export default function DashboardOverview() {
             <div className="flex items-center justify-between px-5 py-4 border-b">
               <h3 className="font-semibold text-sm text-foreground">Rechnungen</h3>
               <Button size="sm" variant="outline" className="gap-1.5 h-8 text-xs" onClick={() => setRechnungDialog({ open: true })}>
-                <Plus size={13} /> Neue Rechnung
+                <IconPlus size={13} stroke={1.5} /> Neue Rechnung
               </Button>
             </div>
             <div className="divide-y">
               {enrichedRechnungen.length === 0 ? (
                 <div className="flex flex-col items-center py-12 text-muted-foreground text-sm gap-2">
-                  <Receipt size={24} className="opacity-40" />
+                  <IconReceipt size={24} stroke={1.5} className="opacity-40" />
                   <span>Noch keine Rechnungen</span>
                 </div>
               ) : enrichedRechnungen.slice().sort((a, b) => (b.fields.rechnungsdatum ?? '').localeCompare(a.fields.rechnungsdatum ?? '')).map((rechnung) => {
@@ -388,13 +388,13 @@ export default function DashboardOverview() {
             <div className="flex items-center justify-between px-5 py-4 border-b">
               <h3 className="font-semibold text-sm text-foreground">Angebote</h3>
               <Button size="sm" variant="outline" className="gap-1.5 h-8 text-xs" onClick={() => setAngebotDialog({ open: true })}>
-                <Plus size={13} /> Neues Angebot
+                <IconPlus size={13} stroke={1.5} /> Neues Angebot
               </Button>
             </div>
             <div className="divide-y">
               {enrichedAngebote.length === 0 ? (
                 <div className="flex flex-col items-center py-12 text-muted-foreground text-sm gap-2">
-                  <TrendingUp size={24} className="opacity-40" />
+                  <IconTrendingUp size={24} stroke={1.5} className="opacity-40" />
                   <span>Noch keine Angebote</span>
                 </div>
               ) : enrichedAngebote.slice().sort((a, b) => (b.fields.angebotsdatum ?? '').localeCompare(a.fields.angebotsdatum ?? '')).map((angebot) => {
@@ -512,7 +512,7 @@ function DashboardError({ error, onRetry }: { error: Error; onRetry: () => void 
   return (
     <div className="flex flex-col items-center justify-center py-24 gap-4">
       <div className="w-12 h-12 rounded-2xl bg-destructive/10 flex items-center justify-center">
-        <AlertCircle size={22} className="text-destructive" />
+        <IconAlertCircle size={22} stroke={1.5} className="text-destructive" />
       </div>
       <div className="text-center">
         <h3 className="font-semibold text-foreground mb-1">Fehler beim Laden</h3>

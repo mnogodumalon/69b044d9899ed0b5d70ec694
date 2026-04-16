@@ -3,40 +3,6 @@
 export type LookupValue = { key: string; label: string };
 export type GeoLocation = { lat: number; long: number; info?: string };
 
-export interface Kunden {
-  record_id: string;
-  createdat: string;
-  updatedat: string | null;
-  fields: {
-    organisation?: string;
-    ansprechperson_vorname?: string;
-    ansprechperson_nachname?: string;
-    email?: string;
-    telefon?: string;
-    strasse?: string;
-    hausnummer?: string;
-    postleitzahl?: string;
-    stadt?: string;
-    notizen?: string;
-  };
-}
-
-export interface Berater {
-  record_id: string;
-  createdat: string;
-  updatedat: string | null;
-  fields: {
-    vorname?: string;
-    nachname?: string;
-    kuerzel?: string;
-    rolle?: LookupValue;
-    status?: LookupValue;
-    email?: string;
-    telefon?: string;
-    kompetenzen?: string;
-  };
-}
-
 export interface Leistungskatalog {
   record_id: string;
   createdat: string;
@@ -48,26 +14,6 @@ export interface Leistungskatalog {
     einheit?: LookupValue;
     notizen?: string;
     leistungsbezeichnung?: string;
-  };
-}
-
-export interface Projekte {
-  record_id: string;
-  createdat: string;
-  updatedat: string | null;
-  fields: {
-    projektnummer?: string;
-    projektname?: string;
-    kunde?: string; // applookup -> URL zu 'Kunden' Record
-    kategorie?: LookupValue;
-    projektleiter?: string; // applookup -> URL zu 'Berater' Record
-    partner?: string;
-    status?: LookupValue;
-    beginn?: string; // Format: YYYY-MM-DD oder ISO String
-    projektstand_beschreibung?: string;
-    naechster_schritt?: string;
-    beschreibung?: string;
-    eigene_rolle?: string;
   };
 }
 
@@ -104,6 +50,24 @@ export interface Rechnungen {
   };
 }
 
+export interface Kunden {
+  record_id: string;
+  createdat: string;
+  updatedat: string | null;
+  fields: {
+    organisation?: string;
+    ansprechperson_vorname?: string;
+    ansprechperson_nachname?: string;
+    email?: string;
+    telefon?: string;
+    strasse?: string;
+    hausnummer?: string;
+    postleitzahl?: string;
+    stadt?: string;
+    notizen?: string;
+  };
+}
+
 export interface Rechnungsliste {
   record_id: string;
   createdat: string;
@@ -120,64 +84,78 @@ export interface Rechnungsliste {
   };
 }
 
+export interface Berater {
+  record_id: string;
+  createdat: string;
+  updatedat: string | null;
+  fields: {
+    vorname?: string;
+    nachname?: string;
+    kuerzel?: string;
+    rolle?: LookupValue;
+    status?: LookupValue;
+    email?: string;
+    telefon?: string;
+    kompetenzen?: string;
+  };
+}
+
+export interface Projekte {
+  record_id: string;
+  createdat: string;
+  updatedat: string | null;
+  fields: {
+    projektnummer?: string;
+    projektname?: string;
+    kunde?: string; // applookup -> URL zu 'Kunden' Record
+    kategorie?: LookupValue;
+    projektleiter?: string; // applookup -> URL zu 'Berater' Record
+    partner?: string;
+    status?: LookupValue;
+    beginn?: string; // Format: YYYY-MM-DD oder ISO String
+    projektstand_beschreibung?: string;
+    naechster_schritt?: string;
+    beschreibung?: string;
+    eigene_rolle?: string;
+  };
+}
+
 export const APP_IDS = {
-  KUNDEN: '69b04492d5d4fe137f4a9821',
-  BERATER: '69b0449d6737c09ddb24e807',
   LEISTUNGSKATALOG: '69b0449d2b38b929a62bf826',
-  PROJEKTE: '69b0449ea6dca0c5c7b66201',
   ANGEBOTE: '69b0449f1057da227ac2d5f0',
   RECHNUNGEN: '69b044a030862338e09ce6de',
+  KUNDEN: '69b04492d5d4fe137f4a9821',
   RECHNUNGSLISTE: '69b044a21918feff3a9b0843',
+  BERATER: '69b0449d6737c09ddb24e807',
+  PROJEKTE: '69b0449ea6dca0c5c7b66201',
 } as const;
 
 
 export const LOOKUP_OPTIONS: Record<string, Record<string, {key: string, label: string}[]>> = {
-  berater: {
-    rolle: [{ key: "geschaeftsfuehrer", label: "Geschäftsführer" }, { key: "berater", label: "Berater" }, { key: "coach", label: "Coach" }, { key: "projektentwickler", label: "Projektentwickler" }, { key: "interimsmanager", label: "Interimsmanager" }, { key: "moderator", label: "Moderator" }, { key: "externer_partner", label: "Externer Partner" }],
-    status: [{ key: "aktiv", label: "Aktiv" }, { key: "verfuegbar", label: "Verfügbar" }, { key: "ausgelastet", label: "Ausgelastet" }, { key: "inaktiv", label: "Inaktiv" }],
-  },
-  leistungskatalog: {
+  'leistungskatalog': {
     kategorie: [{ key: "sb", label: "Strategieberatung (SB)" }, { key: "co", label: "Coaching (CO)" }, { key: "pe", label: "Personalprojekte (PE)" }, { key: "ig", label: "Interimsgeschäftsführung (IG)" }, { key: "ib", label: "Inklusionsbetriebe (IB)" }, { key: "pi", label: "Projekte Inklusion (PI)" }, { key: "wo", label: "Workshops/Seminare (WO)" }, { key: "ip", label: "Immobilienprojekte (IP)" }, { key: "it", label: "IT-Projekte (IT)" }, { key: "so", label: "Sonstiges (SO)" }],
     einheit: [{ key: "stunde", label: "pro Stunde" }, { key: "tag", label: "pro Tag" }, { key: "pauschal", label: "Pauschal" }, { key: "monat", label: "pro Monat" }],
   },
-  projekte: {
-    kategorie: [{ key: "sb", label: "Strategieberatung (SB)" }, { key: "co", label: "Coaching (CO)" }, { key: "pe", label: "Personalprojekte (PE)" }, { key: "ig", label: "Interimsgeschäftsführung (IG)" }, { key: "ib", label: "Inklusionsbetriebe (IB)" }, { key: "pi", label: "Projekte Inklusion (PI)" }, { key: "wo", label: "Workshops/Seminare (WO)" }, { key: "ip", label: "Immobilienprojekte (IP)" }, { key: "it", label: "IT-Projekte (IT)" }, { key: "so", label: "Sonstiges (SO)" }],
-    status: [{ key: "aktuell", label: "1 - Aktuell" }, { key: "akquise", label: "2 - Akquise" }, { key: "abgeschlossen", label: "3 - Abgeschlossen" }],
-  },
-  angebote: {
+  'angebote': {
     angebotsstatus: [{ key: "entwurf", label: "Entwurf" }, { key: "versendet", label: "Versendet" }, { key: "angenommen", label: "Angenommen" }, { key: "abgelehnt", label: "Abgelehnt" }],
   },
-  rechnungen: {
+  'rechnungen': {
     zahlungsstatus: [{ key: "offen", label: "Offen" }, { key: "bezahlt", label: "Bezahlt" }, { key: "ueberfaellig", label: "Überfällig" }, { key: "teilweise_bezahlt", label: "Teilweise bezahlt" }, { key: "storniert", label: "Storniert" }],
   },
-  rechnungsliste: {
+  'rechnungsliste': {
     zahlungsstatus: [{ key: "offen", label: "Offen" }, { key: "bezahlt", label: "Bezahlt" }, { key: "ueberfaellig", label: "Überfällig" }, { key: "teilweise_bezahlt", label: "Teilweise bezahlt" }, { key: "storniert", label: "Storniert" }],
+  },
+  'berater': {
+    rolle: [{ key: "geschaeftsfuehrer", label: "Geschäftsführer" }, { key: "berater", label: "Berater" }, { key: "coach", label: "Coach" }, { key: "projektentwickler", label: "Projektentwickler" }, { key: "interimsmanager", label: "Interimsmanager" }, { key: "moderator", label: "Moderator" }, { key: "externer_partner", label: "Externer Partner" }],
+    status: [{ key: "aktiv", label: "Aktiv" }, { key: "verfuegbar", label: "Verfügbar" }, { key: "ausgelastet", label: "Ausgelastet" }, { key: "inaktiv", label: "Inaktiv" }],
+  },
+  'projekte': {
+    kategorie: [{ key: "sb", label: "Strategieberatung (SB)" }, { key: "co", label: "Coaching (CO)" }, { key: "pe", label: "Personalprojekte (PE)" }, { key: "ig", label: "Interimsgeschäftsführung (IG)" }, { key: "ib", label: "Inklusionsbetriebe (IB)" }, { key: "pi", label: "Projekte Inklusion (PI)" }, { key: "wo", label: "Workshops/Seminare (WO)" }, { key: "ip", label: "Immobilienprojekte (IP)" }, { key: "it", label: "IT-Projekte (IT)" }, { key: "so", label: "Sonstiges (SO)" }],
+    status: [{ key: "aktuell", label: "1 - Aktuell" }, { key: "akquise", label: "2 - Akquise" }, { key: "abgeschlossen", label: "3 - Abgeschlossen" }],
   },
 };
 
 export const FIELD_TYPES: Record<string, Record<string, string>> = {
-  'kunden': {
-    'organisation': 'string/text',
-    'ansprechperson_vorname': 'string/text',
-    'ansprechperson_nachname': 'string/text',
-    'email': 'string/email',
-    'telefon': 'string/tel',
-    'strasse': 'string/text',
-    'hausnummer': 'string/text',
-    'postleitzahl': 'string/text',
-    'stadt': 'string/text',
-    'notizen': 'string/textarea',
-  },
-  'berater': {
-    'vorname': 'string/text',
-    'nachname': 'string/text',
-    'kuerzel': 'string/text',
-    'rolle': 'lookup/select',
-    'status': 'lookup/select',
-    'email': 'string/email',
-    'telefon': 'string/tel',
-    'kompetenzen': 'string/textarea',
-  },
   'leistungskatalog': {
     'kategorie': 'lookup/select',
     'beschreibung': 'string/textarea',
@@ -185,20 +163,6 @@ export const FIELD_TYPES: Record<string, Record<string, string>> = {
     'einheit': 'lookup/select',
     'notizen': 'string/textarea',
     'leistungsbezeichnung': 'string/text',
-  },
-  'projekte': {
-    'projektnummer': 'string/text',
-    'projektname': 'string/text',
-    'kunde': 'applookup/select',
-    'kategorie': 'lookup/select',
-    'projektleiter': 'applookup/select',
-    'partner': 'string/text',
-    'status': 'lookup/select',
-    'beginn': 'date/date',
-    'projektstand_beschreibung': 'string/textarea',
-    'naechster_schritt': 'string/textarea',
-    'beschreibung': 'string/textarea',
-    'eigene_rolle': 'string/text',
   },
   'angebote': {
     'angebotsnummer': 'string/text',
@@ -221,6 +185,18 @@ export const FIELD_TYPES: Record<string, Record<string, string>> = {
     'zahlungsdatum': 'date/date',
     'bemerkungen': 'string/textarea',
   },
+  'kunden': {
+    'organisation': 'string/text',
+    'ansprechperson_vorname': 'string/text',
+    'ansprechperson_nachname': 'string/text',
+    'email': 'string/email',
+    'telefon': 'string/tel',
+    'strasse': 'string/text',
+    'hausnummer': 'string/text',
+    'postleitzahl': 'string/text',
+    'stadt': 'string/text',
+    'notizen': 'string/textarea',
+  },
   'rechnungsliste': {
     'rechnung': 'applookup/select',
     'zugehoeriges_angebot': 'applookup/select',
@@ -231,19 +207,43 @@ export const FIELD_TYPES: Record<string, Record<string, string>> = {
     'zahlungsstatus': 'lookup/select',
     'bemerkungen': 'string/textarea',
   },
+  'berater': {
+    'vorname': 'string/text',
+    'nachname': 'string/text',
+    'kuerzel': 'string/text',
+    'rolle': 'lookup/select',
+    'status': 'lookup/select',
+    'email': 'string/email',
+    'telefon': 'string/tel',
+    'kompetenzen': 'string/textarea',
+  },
+  'projekte': {
+    'projektnummer': 'string/text',
+    'projektname': 'string/text',
+    'kunde': 'applookup/select',
+    'kategorie': 'lookup/select',
+    'projektleiter': 'applookup/select',
+    'partner': 'string/text',
+    'status': 'lookup/select',
+    'beginn': 'date/date',
+    'projektstand_beschreibung': 'string/textarea',
+    'naechster_schritt': 'string/textarea',
+    'beschreibung': 'string/textarea',
+    'eigene_rolle': 'string/text',
+  },
 };
 
 type StripLookup<T> = {
-  [K in keyof T]: T[K] extends LookupValue | undefined ? string | undefined
-    : T[K] extends LookupValue[] | undefined ? string[] | undefined
+  [K in keyof T]: T[K] extends LookupValue | undefined ? string | LookupValue | undefined
+    : T[K] extends LookupValue[] | undefined ? string[] | LookupValue[] | undefined
     : T[K];
 };
 
 // Helper Types for creating new records (lookup fields as plain strings for API)
-export type CreateKunden = StripLookup<Kunden['fields']>;
-export type CreateBerater = StripLookup<Berater['fields']>;
 export type CreateLeistungskatalog = StripLookup<Leistungskatalog['fields']>;
-export type CreateProjekte = StripLookup<Projekte['fields']>;
 export type CreateAngebote = StripLookup<Angebote['fields']>;
 export type CreateRechnungen = StripLookup<Rechnungen['fields']>;
+export type CreateKunden = StripLookup<Kunden['fields']>;
 export type CreateRechnungsliste = StripLookup<Rechnungsliste['fields']>;
+export type CreateBerater = StripLookup<Berater['fields']>;
+export type CreateProjekte = StripLookup<Projekte['fields']>;
