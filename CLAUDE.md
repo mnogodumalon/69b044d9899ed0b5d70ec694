@@ -50,7 +50,6 @@ The following files are **pre-generated** and provide a complete React Router ap
 - `src/lib/enrich.ts` — `enrichX()` functions to resolve applookup fields to display names
 - `src/lib/formatters.ts` — `formatDate()`, `formatCurrency()`, `displayLookup()`, `displayMultiLookup()`, `lookupKey()`, `lookupKeys()` (locale-aware)
 - `src/lib/ai.ts` — AI utilities: `chatCompletion`, `classify`, `extract`, `summarize`, `translate`, `analyzeImage`, `extractFromPhoto`, `fileToDataUri`
-- `src/lib/chat-context.ts` — App-specific AI assistant system prompt
 - `src/components/ChatWidget.tsx` — Floating AI chat assistant (included in Layout)
 - `src/config/ai-features.ts` — AI photo scan toggles per entity (**you can edit this!**)
 - `src/pages/{Entity}Page.tsx` — Full CRUD pages per entity (table, search, create/edit/delete)
@@ -73,7 +72,7 @@ The CRUD pages provide basic list-based CRUD as a fallback. **Your job is to bui
 - **Reuse pre-generated dialogs in DashboardOverview** — When the dashboard needs create/edit dialogs, ALWAYS import and reuse the pre-generated `{Entity}Dialog` from `@/components/dialogs/{Entity}Dialog`. Do NOT build custom dialog forms — they lack photo scan, validation, and all field types. Example: `import { KurseDialog } from '@/components/dialogs/KurseDialog';`
 - **index.css** — NEVER touch. Pre-generated design system (font, colors, sidebar theme). Use existing tokens.
 - **Layout.tsx** — APP_TITLE is pre-set to the appgroup name. Only Edit if you need a different title.
-- **useDashboardData.ts, enriched.ts, enrich.ts, formatters.ts, ai.ts, chat-context.ts, ChatWidget.tsx** — NEVER touch. Use as-is.
+- **useDashboardData.ts, enriched.ts, enrich.ts, formatters.ts, ai.ts, ChatWidget.tsx, ErrorBus.tsx** — NEVER touch. Use as-is.
 - **`src/config/ai-features.ts`** — You MAY edit this file. Set `AI_PHOTO_SCAN['EntityName']` to `true` to enable the "Foto scannen" button in that entity's dialog. The button lets users photograph a document/receipt/card and auto-fill form fields via AI.
 - **CRUD pages and dialogs** — NEVER touch. Complete with all logic.
 - **App.tsx** — Routes are pre-configured. You MAY add custom imports/routes **only inside the `<custom:imports>` and `<custom:routes>` marker blocks** — content between markers is preserved across scaffold updates, everything else is overwritten. Example:
@@ -223,7 +222,6 @@ import { IconPlus, IconPencil, IconTrash, IconCalendar, IconClock, IconMapPin, I
 | `src/lib/enrich.ts` | `enrichX()` functions for applookup resolution |
 | `src/lib/formatters.ts` | `formatDate()`, `formatCurrency()`, `displayLookup()`, `displayMultiLookup()`, `lookupKey()`, `lookupKeys()` |
 | `src/lib/ai.ts` | AI helpers: `chatCompletion`, `classify`, `extract`, `summarize`, `translate`, `analyzeImage`, `extractFromPhoto`, `fileToDataUri` |
-| `src/lib/chat-context.ts` | App-specific system prompt for AI assistant |
 | `src/components/ChatWidget.tsx` | Floating AI chat assistant (in Layout) |
 | `src/config/ai-features.ts` | AI feature toggles — **editable** (photo scan per entity) |
 | `src/App.tsx` | React Router with all routes |
@@ -370,6 +368,10 @@ const file = e.target.files[0];
 const uri = await fileToDataUri(file);
 const fields = await extractFromPhoto(uri, '{"product": "string", "price": "number"}');
 ```
+
+## Public Landing Pages
+
+If the user asks for a landing page (*Landingpage*, *Verteilseite*, marketing page, public submission page — often with an attached mockup or Figma image), use the **`landing-pages`** skill. It covers the skeleton location, `_agent_context/public_forms.json`, the `<public:*>` App.tsx markers, and the `/#/public/p/<slug>` route convention.
 
 ## Build
 After completion: Run `npm run build` to create the production bundle. Deployment is handled automatically by the service.

@@ -1,0 +1,126 @@
+{
+  "version": 1,
+  "forms": [
+    {
+      "entity": "leistungskatalog",
+      "app_id": "69b0449d2b38b929a62bf826",
+      "path": "/rest/apps/69b0449d2b38b929a62bf826/records",
+      "allowed_fields": [
+        "kategorie",
+        "beschreibung",
+        "standardpreis",
+        "einheit",
+        "notizen",
+        "leistungsbezeichnung"
+      ],
+      "pow": true,
+      "pow_difficulty": 50000,
+      "title": "Leistungskatalog — Formular"
+    },
+    {
+      "entity": "angebote",
+      "app_id": "69b0449f1057da227ac2d5f0",
+      "path": "/rest/apps/69b0449f1057da227ac2d5f0/records",
+      "allowed_fields": [
+        "angebotsnummer",
+        "angebotsdatum",
+        "gesamtpreis",
+        "gueltigkeitsdatum",
+        "angebotsstatus",
+        "bemerkungen"
+      ],
+      "pow": true,
+      "pow_difficulty": 50000,
+      "title": "Angebote — Formular"
+    },
+    {
+      "entity": "rechnungen",
+      "app_id": "69b044a030862338e09ce6de",
+      "path": "/rest/apps/69b044a030862338e09ce6de/records",
+      "allowed_fields": [
+        "rechnungsnummer",
+        "rechnungsdatum",
+        "rechnungsbetrag",
+        "faelligkeitsdatum",
+        "zahlungsstatus",
+        "zahlungsdatum",
+        "bemerkungen"
+      ],
+      "pow": true,
+      "pow_difficulty": 50000,
+      "title": "Rechnungen — Formular"
+    },
+    {
+      "entity": "kunden",
+      "app_id": "69b04492d5d4fe137f4a9821",
+      "path": "/rest/apps/69b04492d5d4fe137f4a9821/records",
+      "allowed_fields": [
+        "organisation",
+        "ansprechperson_vorname",
+        "ansprechperson_nachname",
+        "email",
+        "telefon",
+        "strasse",
+        "hausnummer",
+        "postleitzahl",
+        "stadt",
+        "notizen"
+      ],
+      "pow": true,
+      "pow_difficulty": 50000,
+      "title": "Kunden — Formular"
+    },
+    {
+      "entity": "rechnungsliste",
+      "app_id": "69b044a21918feff3a9b0843",
+      "path": "/rest/apps/69b044a21918feff3a9b0843/records",
+      "allowed_fields": [
+        "rechnungsdatum",
+        "rechnungsbetrag",
+        "zahlungsstatus",
+        "bemerkungen"
+      ],
+      "pow": true,
+      "pow_difficulty": 50000,
+      "title": "Rechnungsliste — Formular"
+    },
+    {
+      "entity": "berater",
+      "app_id": "69b0449d6737c09ddb24e807",
+      "path": "/rest/apps/69b0449d6737c09ddb24e807/records",
+      "allowed_fields": [
+        "vorname",
+        "nachname",
+        "kuerzel",
+        "rolle",
+        "status",
+        "email",
+        "telefon",
+        "kompetenzen"
+      ],
+      "pow": true,
+      "pow_difficulty": 50000,
+      "title": "Berater — Formular"
+    },
+    {
+      "entity": "projekte",
+      "app_id": "69b0449ea6dca0c5c7b66201",
+      "path": "/rest/apps/69b0449ea6dca0c5c7b66201/records",
+      "allowed_fields": [
+        "projektnummer",
+        "projektname",
+        "kategorie",
+        "partner",
+        "status",
+        "beginn",
+        "projektstand_beschreibung",
+        "naechster_schritt",
+        "beschreibung",
+        "eigene_rolle"
+      ],
+      "pow": true,
+      "pow_difficulty": 50000,
+      "title": "Projekte — Formular"
+    }
+  ]
+}

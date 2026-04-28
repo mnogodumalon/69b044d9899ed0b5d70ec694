@@ -1,5 +1,7 @@
 const AI_ENDPOINT = "https://my.living-apps.de/litellm/v1/chat/completions";
 const AI_MODEL = "default";
+const AI_MODEL_IMG = "default-img";
+const AI_MODEL_DOCS = "default-docs";
 
 export type ChatMessage = {
   role: "system" | "user" | "assistant";
@@ -7,6 +9,7 @@ export type ChatMessage = {
 };
 
 type CompletionOptions = {
+  model?: string;
   temperature?: number;
   max_tokens?: number;
   top_p?: number;
@@ -18,10 +21,11 @@ export async function chatCompletion(
   messages: ChatMessage[],
   options: CompletionOptions = {}
 ): Promise<string> {
+  const { model = AI_MODEL, ...rest } = options;
   const res = await fetch(AI_ENDPOINT, {
     method: "POST",
     headers: { "Content-Type": "application/json", Accept: "application/json" },
-    body: JSON.stringify({ model: AI_MODEL, messages, ...options }),
+    body: JSON.stringify({ model, messages, ...rest }),
   });
   if (!res.ok) {
     const body = await res.text();
@@ -383,7 +387,7 @@ export async function analyzeImage(imageDataUri: string, prompt: string): Promis
         { type: "image_url", image_url: { url: imageDataUri } },
       ],
     },
-  ]);
+  ], { model: AI_MODEL_IMG });
 }
 
 export async function analyzeDocument(fileDataUri: string, prompt: string): Promise<string> {
@@ -395,7 +399,7 @@ export async function analyzeDocument(fileDataUri: string, prompt: string): Prom
         { type: "file", file: { file_data: fileDataUri } },
       ],
     },
-  ]);
+  ], { model: AI_MODEL_DOCS });
 }
 
 export async function extractFromInput<T = Record<string, unknown>>(
@@ -454,10 +458,11 @@ export async function extractFromInput<T = Record<string, unknown>>(
         : { type: "file", file: { file_data: dataUri! } }
     );
   }
+  const model = hasMedia ? (isImage ? AI_MODEL_IMG : AI_MODEL_DOCS) : AI_MODEL;
   return safeJsonCompletion([
     { role: "system", content: systemParts.join("\n") },
     { role: "user", content: userContent },
-  ]);
+  ], { model });
 }
 
 /** @deprecated Use extractFromInput instead */
